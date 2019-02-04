@@ -29,9 +29,7 @@ if(isset($_GET['d'])){
 '.Language::config('name').':<br/>
 <input name="name" value="'. out($_POST['name']) .'" /><br />
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
-	$tmp->div('menu', '<hr><a href="/lib">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('lib');
 }
 
 $posts=$db->fass_c("SELECT COUNT(*) as count FROM `lib_category`");
@@ -39,7 +37,6 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `lib_category`");
 if($posts==0){
 	$tmp->div('main', Language::config('no_libl_category'));
 	$tmp->footer();
-	exit();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -60,6 +57,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

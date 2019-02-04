@@ -18,7 +18,6 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `journal` where `komy` = '".Us
 if($posts==0){
    $tmp->div('main', Language::config('no_journal'));
    $tmp->footer();
-   exit();
 }
 
 $total = (($posts-1)/$num)+1;

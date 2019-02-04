@@ -29,47 +29,14 @@ if(isset($_GET['del'])) {
 	}
 }
 
-if(isset($_GET['otv'])){
-	if(User::aut()){
-		$o=$db->guard($_GET['otv']);
-		$ot=$db->fass("SELECT * FROM `chat` where `id` = '".$o."'");
-		
-		if($ot['kto'] != User::ID() && !empty($ot)){
 
-			if(isset($_REQUEST['submit'])) {
-				$message = $db->guard($_POST['messages']);
-				
-				if(empty($message) || mb_strlen($_POST['messages'], 'UTF-8')<2) $error .= Language::config('no_message');
+reply_user('chat', 'chat', null, null, true);
 
-				if(!isset($error)) {
-					$db->query("INSERT INTO `chat` set `kto` = '".User::ID()."', `message` = '[rep]".nickname($ot['kto'])."[/rep] ".$message."', `time` = '".time()."' ");
-					$lid = $db->insert_id();
-					
-					User::new_notify($ot['kto'], 'replay_chat', '/chat/'.$lid);
-
-					$db->query("UPDATE `users` set `money` = money + 5 where `id` = '".User::ID()."'");
-					header('location: /chat');
-				}
-			}
-
-			$tmp->div('messages', '<div>'.bb(smile($ot['message'])).'</div><hr>' );
-			
-			error($error);
-			bbcode();
-
-			$tmp->div('main', '<form method="POST" name="message" action="">'.Language::config('message').':<br/><textarea name="messages"></textarea><br /><input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
-			$tmp->div('menu', '<hr><a href="/chat">'.img('link.png').' '.Language::config('back').'</a>');
-			$tmp->footer();
-			exit();
-		}
-
-	} else {
-		header('location: /chat');
-	}
-}
 
 if(isset($_REQUEST['submit'])) {
 	if(User::aut()){
+		Security::verify_str();
+
 		$message = $db->guard($_POST['messages']);
 		$ant=$db->fass("SELECT * FROM `chat` where `kto` = '".User::ID()."' and `message` = '".$message."' and `time` > '".(time() - 3)."' limit 1");
 		
@@ -97,7 +64,13 @@ if(User::aut()){
 
 	$tmp->div('menu', '<a href="/chat?'.rand(101, 999).' ">'.img('refresh.png').' '.Language::config('refresh').'</a>');
 	bbcode();
-	$tmp->div('main', '<form method="POST" name="message" action="">'.Language::config('message').':<br/><textarea name="messages"></textarea><br /><input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
+	
+	$tmp->div('main', '<form method="POST" name="message" action="">
+'.Language::config('message').':<br/>
+<textarea name="messages"></textarea><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
+<input type="submit" name="submit" value="'.Language::config('send').'" />
+</form>');
 }
 
 if(!$posts) {
@@ -112,6 +85,5 @@ if(!$posts) {
 page('?');
 }
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

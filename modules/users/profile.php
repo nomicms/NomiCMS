@@ -16,6 +16,9 @@ $tmp->title('title', Language::config('user'). ' '.$u['login']);
 User::panel();
 User::banned($u['id']);
 
+reply_user('wall', 'us', $idu, 'komy');
+
+
 $tmp->div('main', ava($u));
 
 if($u['level'] == 2) $lvl = '<span class="level mod">MOD</span>';
@@ -55,6 +58,10 @@ if (User::aut() && $u['id'] != User::ID()) {
 echo '<a href="/friends'.$idu.'">'.img('users.png').' '.Language::config('friends').' <span>'.$db->fass_c("SELECT COUNT(*) as count FROM `friends` where `komy` = '".$idu."' and `status` = '1'").'</span></a>
 <a href="/blogs/ublogs'.$idu.'">'.img('blog.png').' '.Language::config('blogs').' <span>'.$db->fass_c("SELECT COUNT(*) as count FROM `blogs` where `kto` = '".$idu."' ").'</span></a>';
 
+// $tmp->title('title', Language::config('forum'));
+
+echo '<a href="/forum/utopic'.$idu.'">'.img('forum.png').' '.Language::config('topic').' <span>'.$db->fass_c("SELECT COUNT(*) as count FROM `forum_topic` where `kto` = '".$idu."' ").'</span></a>
+<a href="/forum/uposts'.$idu.'">'.img('posts.png').' '.Language::config('posts').' <span>'.$db->fass_c("SELECT COUNT(*) as count FROM `forum_message` where `kto` = '".$idu."' ").'</span></a>';
 
 if (User::profile('level') >=3) {
 	if (User::ID() != $u['id']) {
@@ -76,6 +83,8 @@ $wall = $db->query("select * from `wall` where `komy` = '".$u['id']."' ORDER BY 
 $tmp->title('title" id="wall', Language::config('wall'));
 
 if(isset($_REQUEST['submit'])){
+	Security::verify_str();
+
 	$message = $db->guard($_POST['messages']);
 	if (empty($message)) $error .= Language::config('no_message');
 
@@ -91,7 +100,7 @@ if(isset($_REQUEST['submit'])){
 if (User::aut()) {
 	if (!empty($wall)) {
 		while ($w=$wall->fetch_assoc()){
-			echo '<hr><div class="news"><div>'.nick_new($w['kto']).' '.((User::ID() == $w['kto'] || User::level() >= 2) ? '<a class="de" href="/us'.$u['id'].'/delete'.$w['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($w['time']).'</span><br/>' .bb(smile($w['message'])).'</div></div>';
+			echo '<hr><div class="news"><div>'.nick_new($w['kto']).' '.((User::ID() == $w['kto'] || User::level() >= 2) ? '<a class="de" href="/us'.$u['id'].'/delete'.$w['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($w['time']).'</span>'.($w['kto'] != User::ID() ? '<a class="answer" href="us'.$idu.'/otv'.$w['id'].'">'.img('answer.png').'</a>' : NULL ).' <br/>' .bb(smile($w['message'])).'</div></div>';
 		}
 	}
 
@@ -101,12 +110,13 @@ if (User::aut()) {
     $_POST['message'] = (empty($_POST['message']) ? null : $_POST['message']);
 	
 	$tmp->div('main', '
-		<form method="POST" name="message" action="">'.Language::config('message').':<br/><textarea name="messages">'.out($_POST['message']).'</textarea><br/><input type="submit" name="submit" value="'.Language::config('send').'">
-		</form>');
+<form method="POST" name="message" action="">'.Language::config('message').':<br/><textarea name="messages">'.out($_POST['message']).'</textarea><br/>
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
+<input type="submit" name="submit" value="'.Language::config('send').'">
+</form>');
 
 	page('?');
 }
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

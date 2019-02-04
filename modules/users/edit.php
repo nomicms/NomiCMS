@@ -17,23 +17,23 @@ if (isset($_REQUEST['submit'])) {
     $strana = $db->guard($_POST['strana']);
     $gorod = $db->guard($_POST['gorod']);
     $osebe = $db->guard($_POST['osebe']);
-    $email = $db->guard($_POST['email']);
     $tg = $db->guard($_POST['tg']);
     $sex = $db->guard($_POST['sex']);
 
     if (!empty($name) && !preg_match("#^([A-zА-я0-9\-\_\ ])+$#ui", $_POST['name']) || (!empty($fname) && !preg_match("#^([A-zА-я0-9\-\_\ ])+$#ui", $_POST['fname']))) {
         $error .= Language::config('sim_no_reg_name')."<br/>";
     }
-
-    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) $error .= Language::config('email_error')."<br/>";
-        
+    
     if (!isset($error)) {
-    	$db->query("UPDATE `users` set `name` = '".$db->escape($name)."', `first_name` = '".$db->escape($fname)."', `sex` = '".$db->escape($sex)."', `country` = '".$db->escape($strana)."', `city` = '".$db->escape($gorod)."', `about` = '".$db->escape($osebe)."', `email`= '".$db->escape($email)."', `tg` = '".$db->escape($tg)."' WHERE `id`='".User::ID()."' ");
+    	$db->query("UPDATE `users` set `name` = '".$db->escape($name)."', `first_name` = '".$db->escape($fname)."', `sex` = '".$db->escape($sex)."', `country` = '".$db->escape($strana)."', `city` = '".$db->escape($gorod)."', `about` = '".$db->escape($osebe)."', `tg` = '".$db->escape($tg)."' WHERE `id`='".User::ID()."' ");
         $tmp->div('success', Language::config('ok_save'));
     }
 }
 
 error($error);
+
+if(User::profile('email') == null || User::profile('email_c') == 0)
+    $tmp->div('error orange', Language::config('not_secure').'! <br> <a class="email_button" href="email_manager">'.Language::config('sec_butt').'</a>');
 
 
 $a=$db->fass("select * from `users` where `id` = '".User::ID()."'");
@@ -56,12 +56,9 @@ $tmp->div('main' ,'<form method="POST" action="">
 <option value="1" '.(out($a['sex']) == 1 ? 'selected="selected"':NULL).'>'.Language::config('men').'</option>
 <option value="0" '.(out($a['sex']) == 0 ? 'selected="selected"':NULL).'>'.Language::config('wom').'</option>
 </select><br/>
-'.Language::config('email').':<br/>
-<input type="text" name="email" value="'.out($a['email']).'"/><br/>
 '.Language::config('tg').':<br/>
 <input type="text" name="tg" value="'.out($a['tg']).'"/><br/>
 <input type="submit" name="submit" value="'.Language::config('save').'" /></form>');
 
-$tmp->div('menu', '<hr><a href="/panel">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('panel');
 ?>

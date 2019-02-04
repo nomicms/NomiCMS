@@ -60,9 +60,7 @@ if(isset($_GET['edit'])){
 <input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="edit_news" value="'.Language::config('edit').'" /></form>');
 
-	$tmp->div('menu', '<hr><a href="/apanel/news">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('apanel/news');
 }
 
 if(isset($_REQUEST['submit'])) {
@@ -101,6 +99,5 @@ if(!$posts){
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/apanel">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('apanel');
 ?>

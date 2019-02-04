@@ -28,12 +28,12 @@ if(User::aut()){
 		User::new_notify($id, 'friend_no', '/us'.User::ID());
 		
    		$db->query("DELETE FROM `friends` where `id` = '".$id2."' LIMIT 1");
-        header('Location: /friends/bid');
+   		go_exit('/friends/bid');
     }
 
 	error($error);
 } else {
-	header('location: /');
+	go_exit();
 }
 
 $tmp->footer();

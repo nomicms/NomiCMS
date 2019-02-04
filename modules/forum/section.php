@@ -39,9 +39,7 @@ if(User::level() >=3){
 '.Language::config('pos').':<br/>
 <input type="text" name="pos" value="'.$p['pos'].'" style="width: 60px" /><br/>
 <input type="submit" name="submit" value="'.Language::config('save').'" /></form>');
-		$tmp->div('menu', '<hr><a href="/forum/'.$p['razdel'].'/'.$p['id'].'">'.img('link.png').' '.Language::config('back').'</a>');
-		$tmp->footer();
-   		exit();
+   		$tmp->back('forum/'.$p['razdel'].'/'.$p['id']);
 	}
 
 	if(isset($_GET['d'])) {
@@ -54,7 +52,6 @@ if(User::level() >=3){
 
 		$tmp->del_sure($p['name'], 'd&yes');
 		$tmp->footer();
-		exit();
 	}
 
 }
@@ -62,15 +59,16 @@ if(User::level() >=3){
 
 if(isset($_GET['nt'])){
 	if(isset($_REQUEST['submit'])){
+		Security::verify_str();
+		
 		$name = $db->guard($_POST['name']);
 		$message = $db->guard($_POST['message']);
 		
 		if(empty($name) || empty($message)) $error .= Language::config('no_message');
 		
 		if(!isset($error)){
-			$db->query("insert into `forum_topic` set `razdel` = '".$p['razdel']."', `section` = '".$p['id']."', `kto` = '".User::ID()."', `name` = '".$name."', `time` = '".time()."', `last_message_time` = '".time()."' ");
+			$db->query("insert into `forum_topic` set `razdel` = '".$p['razdel']."', `section` = '".$p['id']."', `kto` = '".User::ID()."', `name` = '".$name."', `message` = '".$message."', `time` = '".time()."', `last_message_time` = '".time()."' ");
 			$lid = $db->insert_id();
-			$db->query("insert into `forum_message` set `razdel` = '".$p['razdel']."', `section` = '".$p['id']."', `topic` = '".$lid."', `kto` = '".User::ID()."', `message` = '".$message."', `time` = '".time()."' ");
 			header('location: /forum/topic'.$lid);
 		}
 	}
@@ -85,10 +83,9 @@ $_POST['name'] = (empty($_POST['name']) ? null : $_POST['name']);
 <input type="text" name="name" value="'.out($_POST['name']) .'" /><br/>
 '.Language::config('message').':<br/>
 <textarea name="message">'.out($_POST['message']).'</textarea><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
-	$tmp->div('menu', '<hr><a href="/forum/'.$p['razdel'].'/'.$p['id'].'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('forum/'.$p['razdel'].'/'.$p['id']);
 }
 	
 
@@ -99,9 +96,7 @@ if($posts==0){
 	if(User::aut()){
 		$tmp->div('menu', '<a class="items" href="/forum/'.$p['razdel'].'/'.$p['id'].'?nt">'.img('new_topic.png').' '.Language::config('new_topic').'</a>');
 	}
-	$tmp->div('menu', '<a href="/forum/'.$p['razdel'].'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('forum/'.$p['razdel']);
 }
 
 $total = (($posts-1)/$num)+1;
@@ -136,6 +131,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/forum/'.$p['razdel'].'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('forum/'.$p['razdel']);
 ?>

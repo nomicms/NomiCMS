@@ -32,15 +32,30 @@ if(empty($page) or $page<0) $page=1;
 if($page>$total) $page=$total;
 $start=$page*$num-$num;
 
+
+$ignor=$db->fass("SELECT `ignor` FROM `dialogs` WHERE `kto`= '".$id."' AND `komy`= '".User::ID()."' LIMIT 1")['ignor'];
+if ($ignor) error(Language::config('ignor_you'));
+
+// var_dump($proverka);
+
+if(isset($_REQUEST['ignor'])) {
+    $db->query("UPDATE `dialogs` set `ignor` = '".($proverka['ignor'] ? 0 : 1)."' where `kto` = '".User::ID()."' and `komy` = '".$id."' ");
+    header('location: /dialogs/dialogs'.$id);
+}
+
+
 $d=$db->query("select * from `dialogs_message` where `kto` = '".User::ID()."' and `komy` = '".$id."' or `kto` = '".$id."' and `komy` = '".User::ID()."' ORDER BY time DESC LIMIT ".$start.", ".$num." ");
 
 if(User::aut()){
     if(isset($_REQUEST['submit'])) {
+        if ($ignor) go_exit('/dialogs/dialogs'.$id);
+
         $text = $db->guard($_POST['messages']);
           
         Security::verify_str();  
 
-        if(empty($text) || mb_strlen($text, 'UTF-8')<2) $error .= Language::config('no_message');
+        if(empty($text) || mb_strlen($text, 'UTF-8')<2) $error .= Language::config('no_message').'<br>';
+        if ($proverka['ignor']) $error .= Language::config('need_del_ignor');
 
         $filename = $db->guard($_FILES['file']['name']);
 
@@ -73,6 +88,7 @@ if(User::aut()){
     }
 
     $tmp->div('menu', '<a href="/dialogs/dialogs'.$id.'?'.rand(101, 999).' ">'.img('refresh.png').' '.Language::config('refresh').'</a>');
+    
     error($error);
     bbcode();
 
@@ -81,7 +97,9 @@ if(User::aut()){
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
 <input type="hidden" name="S_Code" value="'.Security::rand_str().'">
-<input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
+<input type="submit" name="submit" value="'.Language::config('send').'" />
+<a class="ignore '.($proverka['ignor'] ? 'green' : 'red').'" href="?ignor">'.($proverka['ignor'] ? Language::config('ignor_del') : Language::config('ignor_add')).'</a></form>');
+
 }
 
 
@@ -91,9 +109,9 @@ $date_last_entry = $db->guard($b['date_last_entry']);
 echo (empty($date_last_entry) ? NULL : $date_last_entry > (time() - 360) ? NULL : '<hr><div class="main">'.Language::config('date_last_entry').': '.times($date_last_entry).'</div>');
 
 if($posts==0){
-	$tmp->div('main', Language::config('no_messages').'');
+	$tmp->div('main', Language::config('no_messages'));
+    $tmp->div('menu', '<hr><a href="/dialogs">'.img('link.png').' '.Language::config('dialogs').'</a>');
     $tmp->footer();
-    exit();
 }
 
 

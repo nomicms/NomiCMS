@@ -12,9 +12,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `news`");
 
 if(!$posts){
    $tmp->div('main', Language::config('no_news'));
-   $tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-   $tmp->footer();
-   exit();
+   $tmp->home();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -33,6 +31,5 @@ while($n=$news->fetch_assoc()) {
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

@@ -33,6 +33,7 @@ if(isset($_GET['go'])){
 
 		error_reporting(0);
 		$mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		$mysqli->set_charset('utf8mb4');
 
 		if ($mysqli->connect_errno) {
 		    echo "<div class='error'>Не удалось подключиться к MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . "</div>";
@@ -47,7 +48,6 @@ if(isset($_GET['go'])){
 
 			file_put_contents(S."/db_config.php", $content);
 			chmod(S.'/db_config.php', 0664);
-			$mysqli->query('SET NAMES `utf8`');
 
 			$dumpdb = file_get_contents('table.sql');
 			$ext = explode('-- --------------------------------------------------------', $dumpdb);
@@ -83,8 +83,8 @@ if(isset($_GET['go'])){
 			chmod(R.'/files/mail', 0777);
 		}
 
-		echo '<div class="success">Установка завершена!</div>' . ($demo ? '<div class="main">Вы установили демо-контент!<br>Используйте данные для входа:<br><span class="new">Логин: admin</span> <span class="new">Пароль: 1111</span></div><hr>' : NULL) . '<div class="menu"><a href="/"><img src="/design/styles/default/img/link.png"> Главная</a></div><div class="footer">NomiCMS / '.date('Y').'</div>';
-		exit();
+		echo '<div class="success">Установка завершена!</div>' . ($demo ? '<div class="main">Вы установили демо-контент!<br>Используйте данные для входа:<br><span class="new">Логин: admin</span> <span class="new">Пароль: 1111</span></div><hr>' : NULL) . '<div class="menu"><a href="/"><img src="/design/styles/default/img/link.png"> Главная</a></div><div class="footer">NomiCMS / '.date('Y').'</div></body></html>';
+		exit;
 	}
 
 echo '<div class="main">

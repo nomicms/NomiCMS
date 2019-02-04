@@ -56,6 +56,5 @@ if (User::level()>=2) {
 	go_exit();
 }
 
-$tmp->div('menu', '<hr><a href="/us'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('us'.$id);
 ?>

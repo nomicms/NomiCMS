@@ -16,9 +16,10 @@ session_start();
 $db = new DB();
 $tmp = new Tmp();
 
-$ip = Core::real_IP();
 
+$ip = Core::real_IP();
 $browser = browser($_SERVER['HTTP_USER_AGENT']);
+
 
 if (User::aut()) {
 	$useragent = $_SERVER['HTTP_USER_AGENT'];
@@ -29,7 +30,6 @@ if (User::aut()) {
 		$tmp->header('home');
 		User::banned(User::ID());
 		$tmp->footer();
-		exit();
 	}
 
 } else {

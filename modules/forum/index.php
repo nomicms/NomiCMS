@@ -32,9 +32,7 @@ if(User::level() >=3){
 '.Language::config('pos').':<br/>
 <input type="text" name="pos" value="'.out($_POST['pos']).'" style="width: 60px" /><br/>
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
-		$tmp->div('menu', '<hr><a href="/forum">'.img('link.png').' '.Language::config('back').'</a>');
-		$tmp->footer();
-   		exit();
+   		$tmp->back('forum');
 	}
 }
 
@@ -43,7 +41,6 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `forum_razdel`");
 if($posts==0){
    $tmp->div('main', Language::config('no_razdels'));
    $tmp->footer();
-   exit();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -54,7 +51,9 @@ if($page>$total) $page=$total;
 $start=$page*$num-$num;
 
 
-$f= $db->query("SELECT * FROM `forum_razdel` ORDER BY pos ASC LIMIT ".$start.", ".$num."");
+$tmp->div('menu', '<a class="items" href="forum/search">'.img('search.png').' '.Language::config('search').'</a>');
+
+$f = $db->query("SELECT * FROM `forum_razdel` ORDER BY pos ASC LIMIT ".$start.", ".$num."");
 
 echo '<div class="menu">';
 while($fo=$f->fetch_assoc()){
@@ -64,6 +63,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

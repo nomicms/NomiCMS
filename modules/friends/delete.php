@@ -24,7 +24,7 @@ if(User::aut()){
 
 		$db->query("DELETE FROM `friends` where `kto` = '".User::ID()."' and `komy` = '".$id."' LIMIT 1");
 		$db->query("DELETE FROM `friends` where `kto` = '".$id."' and `komy` = '".User::ID()."' LIMIT 1");
-		header('Location: /us'.$id.'');
+		go_exit('/us'.$id);
 	}
 
 } else {

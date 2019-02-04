@@ -25,16 +25,14 @@ if(User::aut()) {
 	$pr2 = $db->fass_c("SELECT COUNT(*) as count FROM `friends` WHERE `kto` = '".$id."' and `komy` = '".User::ID()."'");
 	
 	if ($pr2 != 0) {
-		header('location: /friends/bid');
-		exit();
+		go_exit('/friends/bid');
 	}
 	
 	if ($pr != 0) $error .= Language::config('error');
 
 	if(!isset($error)){
-		$db->query("INSERT INTO `friends` set `kto` = '".User::ID()."', `komy` = '".$id."', `status` = '0'  ");
-		header('location: /friends/bid');
-		//header('location: /us'.$id.'');
+		$db->query("INSERT INTO `friends` set `kto` = '".User::ID()."', `komy` = '".$id."', `status` = '0' ");
+		go_exit('/friends/bid');
 	}
 
 	error($error);

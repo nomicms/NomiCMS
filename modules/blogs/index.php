@@ -16,7 +16,6 @@ if(!$posts){
 	else
 		$tmp->div('main', Language::config('no_blogs'));
 	$tmp->footer();
-	exit();
 }
 
 $total = (($posts-1)/$num)+1;

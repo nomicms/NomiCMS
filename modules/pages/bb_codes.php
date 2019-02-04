@@ -24,6 +24,5 @@ $tmp->div('main', '<div class="helps_table">' .
 '<span>[img]</span> http://... <span>[/img]</span> - <img style="padding: 0" src="../design/images/nomicms.jpg" alt="*">'.
 '</div>');
 
-$tmp->div('menu', '<hr><a href="/pages">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('pages');
 ?>

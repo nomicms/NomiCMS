@@ -22,8 +22,7 @@ if(User::aut() && $t['is_close_topic'] != 1){
 	if (!$ot) $tmp->show_error();
 
 	if ($p['time'] + 60 < time() && User::level() <= 2) {
-		header('location: /forum/topic'.$p['topic']);
-		exit();
+		go_exit('/forum/topic'.$p['topic']);
 	}
 
 	if($ot['kto'] == User::ID() || User::level() >= 2){
@@ -83,10 +82,7 @@ if(User::aut() && $t['is_close_topic'] != 1){
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
 <input type="submit" name="submit" value="'.Language::config('edit').'" /></form>');
-
-		$tmp->div('menu', '<hr><a href="/forum/topic'.$p['topic'].'">'.img('link.png').' '.Language::config('back').'</a>');
-		$tmp->footer();
-		exit();
+		$tmp->back('forum/topic'.$p['topic']);
 	}
 
 } else {

@@ -23,6 +23,5 @@ $tmp->div('main', 'Стоимость размещения рекламы:<br/>
 <b>Oтвeтcтвeннocть:</b><br/>
 Независимо от способа размещения объявления на сайте <b style="text-transform: uppercase">'.$_SERVER['SERVER_NAME'].'</b>, oтвeтcтвeннocть зa eгo coдepжaние нeceт peклaмoдaтeль.');
 
-$tmp->div('menu', '<hr><a href="/pages">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('pages');
 ?>

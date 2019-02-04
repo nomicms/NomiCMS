@@ -11,6 +11,8 @@ User::panel();
 if(User::aut()){
 
 	if(isset($_POST['submit'])){
+		Security::verify_str();
+
 		$name = $db->guard($_POST['name']);
 		$text = $db->guard($_POST['text']);
 		
@@ -34,11 +36,12 @@ $_POST['text'] = (empty($_POST['text']) ? null : $_POST['text']);
 	<input type="text" name="name" value="'. out($_POST['name']) .'" /><br/>
 	'.Language::config('text').': <br/>
 	<textarea name="text">'. out($_POST['text']) .'</textarea><br />
+	<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 	<input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
-	$tmp->div('menu', '<hr><a href="/blogs">'.img('link.png').' '.Language::config('back').'</a>');
+	
 } else {
 	header('location: /');
 }
 
-$tmp->footer();
+$tmp->back('blogs');
 ?>

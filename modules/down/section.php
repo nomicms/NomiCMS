@@ -21,6 +21,8 @@ if (!$p) $tmp->show_error();
 if(isset($_GET['d'])){
 
 	if(isset($_REQUEST['submit'])){
+		Security::verify_str();
+
 		$name = $db->guard($_POST['name']);
 		$opis = $db->guard($_POST['opis']);
 		$whitelist = explode(';', $p['whitelist']); # Допустимые расширения
@@ -85,11 +87,10 @@ $tmp->div('main', '<form action="" method="post" enctype="multipart/form-data">
 '.Language::config('screen').' (для изображений не нужен):<br/>
 <input name="screen" type="file" id="file_s" onchange="uploadFile(this)">
 <label class="select_file" for="file_s">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
 
-$tmp->div('menu', '<hr><a href="/zc/cat'.$p['category'].'/pc'.$p['id'].'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
-exit();
+$tmp->back('zc/cat'.$p['category'].'/pc'.$p['id']);
 }
 
 if(User::level() >= 3){
@@ -102,7 +103,6 @@ if(User::level() >= 3){
 
 		$tmp->del_sure($p['name'], 'del&yes');
 		$tmp->footer();
-		exit();
 	}
 }
 
@@ -115,9 +115,7 @@ if($posts==0){
 		$tmp->div('menu', '<a class="items" href="/zc/cat'.$p['category'].'/pc'.$p['id'].'?d">'.img('add_i.png').' '.Language::config('add_zc_file').'</a>');
 	}
 
-	$tmp->div('menu', '<a href="/zc/cat'.$cid.'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('zc/cat'.$cid);
 }
 
 $total = (($posts-1)/$num)+1;
@@ -141,6 +139,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/zc/cat'.$cid.'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('zc/cat'.$cid);
 ?>

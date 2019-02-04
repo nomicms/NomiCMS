@@ -11,9 +11,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `users`");
 
 if(!$posts){
    $tmp->div('main', Language::config('no_users'));
-   $tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-   $tmp->footer();
-   exit();
+   $tmp->home();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -31,6 +29,5 @@ while($user=$u->fetch_assoc()) {
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

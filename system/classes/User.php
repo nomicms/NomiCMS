@@ -105,7 +105,7 @@ Class User {
 			$friends = $db->fass_c("SELECT COUNT(*) as count FROM `friends` WHERE `komy` = '".self::ID()."' and `status` = '0'");
 
 			echo '<div class="panel flex">';
-			if (self::level() >= 2) echo '<a href="/apanel">'.img('admin.png').'</a>';
+			if (self::level() >= 2) echo '<a class="apanel" href="/apanel">'.img('admin.png').'</a>';
 			
 			echo '<a href="/panel">'.img('panel.png').($journal || $friends ? NULL : ' &nbsp;'.Language::config('panel')).'</a>';
 			echo '<a href="/dialogs">'.img('mail.png').($journal || $friends ? NULL : ' &nbsp;'.Language::config('dialogs')).' '.($mes > 0 ? '<span>+'.$mes.'</span>' : NULL).'</a>';

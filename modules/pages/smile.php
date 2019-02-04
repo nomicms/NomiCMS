@@ -28,6 +28,5 @@ $tmp->div('main', '<div class="helps_table">'.
 	 '<span>:lol:</span>' . smile(':lol:') .
 	 '</div>');
 
-$tmp->div('menu', '<hr><a href="/pages">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('pages');
 ?>

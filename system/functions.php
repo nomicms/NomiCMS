@@ -20,9 +20,9 @@ function bbcode() {
 	require(R.'/modules/pages/bbcode.php');
 }
 
-function go_exit() {
-	header('location: /');
-	exit();
+function go_exit($url = '/') {
+	header('location: '.$url);
+	exit;
 }
 
 function upload_file() {
@@ -36,6 +36,25 @@ function uploadFile(target) {
 
 FILE;
 }
+
+
+function email_template($title, $text) {
+	return <<<EMAIL
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>$title</title>
+<meta name="viewport" content="width=device-width" />
+</head>
+<body style="background: #d2d2d2; margin:0; padding:0; font-size: 18px; font-family: Arial, sans-serif; text-align: center;">
+<div style="margin:0; background: #2980b9; padding: 25px; color:#fff; border-bottom: 5px solid #215e86;">$title</div>
+<div style="background: #fff; padding: 25px; margin: 25px;">$text</div>
+</body>
+</html>
+EMAIL;
+}
+
 
 function times($time) { 
 	switch (date('j n Y', $time)) {
@@ -64,6 +83,53 @@ function times($time) {
 	}
 }
 
+
+function reply_user($name, $link, $id, $name_uid, $prelink=false) {
+	if(isset($_GET['otv'])){
+		if(User::aut()){
+			global $db, $tmp;
+
+			$o=$db->guard($_GET['otv']);
+			$ot=$db->fass("SELECT * FROM `".$name."` where `id` = '".$o."'");
+
+			if($ot['kto'] != User::ID() && !empty($ot)) {
+				
+				if(isset($_REQUEST['submit'])) {
+					$message = $db->guard($_POST['messages']);
+					
+					if(empty($message) || mb_strlen($_POST['messages'], 'UTF-8')<2) $error .= Language::config('no_message');
+
+					if(!isset($error)) {
+						$itname = ($id ? ",`$name_uid` = '$id'" : NULL);
+						$db->query("INSERT INTO `".$name."` set `kto` = '".User::ID()."', `message` = '[rep]".nickname($ot['kto'])."[/rep] ".$message."', `time` = '".time()."' ".$itname."");
+						$url = ($prelink ? '/'.$link.'/'.$db->insert_id() : '/'.$link.$id);
+
+						User::new_notify($ot['kto'], 'replay_'.$name, $url);
+
+						$db->query("UPDATE `users` set `money` = money + 5 where `id` = '".User::ID()."'");
+						header('location: /'.$link.$id);
+					}
+				}
+
+				$tmp->div('messages', '<div>'.bb(smile($ot['message'])).'</div><hr>' );
+				
+				error($error);
+				bbcode();
+
+				$tmp->div('main', '<form method="POST" name="message" action="">'.Language::config('message').':<br/>
+					<textarea name="messages"></textarea><br />
+					<input type="submit" name="submit" value="'.Language::config('send').'" />
+					</form>');
+				$tmp->back($link.$id);
+			}
+
+		} else {
+			header('location: /'.$link.$id);
+		}
+	}
+}
+
+
 function nick_new($id, $no_link=false) {
 	global $db;
 	$as = (($no_link) ? 'span' : 'a');
@@ -80,7 +146,7 @@ function level_new($x) {
 }
 
 function ava($x) {
-	return '<img src="/files/ava/'.$x['ava'].'" style="max-width: 210px;" alt="*">';
+	return '<img class="ava_orig" src="/files/ava/'.$x['ava'].'" alt="*">';
 }
 
 function nickname($id) {
@@ -108,20 +174,22 @@ function page($url) {
 
 function bb($mes) {
     $mes = stripslashes($mes);
-	$mes = preg_replace('#\[b\](.+)\[/b\]#si', '<b>\1</b>', $mes);
-    $mes = preg_replace('#\[i\](.+)\[\/i\]#si', '<i>\1</i>', $mes);
-    $mes = preg_replace('#\[u\](.+)\[\/u\]#si', '<u>\1</u>', $mes);
-    $mes = preg_replace('#\[s\](.+)\[\/s\]#si', '<s>\1</s>', $mes);
-    $mes = preg_replace('#\[cit\](.+)\[/cit\]#si', '<div class="cit">\1</div>', $mes);
-    $mes = preg_replace('#\[rep\](.+)\[/rep\]#si', '<span class="rep">\1</span>', $mes);
-    $mes = preg_replace('#\[img\](.+)\[/img\]#si', '<a href="\1"><img src="\1" alt="*"></a>', $mes);
-    $mes = preg_replace('#\[red\](.+)\[\/red\]#si', '<span style="color: #f44336">\1</span>', $mes);
-    $mes = preg_replace('#\[green\](.+)\[\/green\]#si', '<span style="color: #81c136">\1</span>', $mes);
-    $mes = preg_replace('#\[blue\](.+)\[\/blue\]#si', '<span style="color: #2196f3">\1</span>', $mes);
-    $mes = preg_replace('~\[color=((?:#[a-fA-F0-9]{3,6})+)\](.+)\[/color\]~s', '<span style="color: \1">\2</span>', $mes);
-    $mes = preg_replace('#\[code\](.+)\[\/code\]#si', '<code>\1</code>', $mes);
-    $mes = preg_replace('#\[url=(https?://[a-z0-9-]+\.+\S[^\'"(><]+)*\](.+)\[/url\]#i', '<a class="link_visual" target="_blank" href="$1">$2</a>', $mes);
-    $mes = preg_replace("~(^|\s|-|:| |\()(http(s?)://|(www\.))((\S{25})(\S{5,})(\S{15})([^\<\s.,>)\];'\"!?]))~i", "\\1<a class=\"link_visual\" target=\"_blank\" href=\"http\\3://\\4\\5\">\\4\\6...\\8\\9</a>", $mes);
+	$mes = preg_replace('#\[b\](.+?)\[/b\]#si', '<b>\1</b>', $mes);
+    $mes = preg_replace('#\[i\](.+?)\[\/i\]#si', '<i>\1</i>', $mes);
+    $mes = preg_replace('#\[u\](.+?)\[\/u\]#si', '<u>\1</u>', $mes);
+    $mes = preg_replace('#\[s\](.+?)\[\/s\]#si', '<s>\1</s>', $mes);
+    $mes = preg_replace('#\[cit\](.+?)\[/cit\]#si', '<div class="cit">\1</div>', $mes);
+    $mes = preg_replace('#\[rep\](.+?)\[/rep\]#si', '<span class="rep">\1</span>', $mes);
+    $mes = preg_replace('#\[img\](.+?)\[/img\]#si', '<a href="\1"><img class="attach" src="\1" alt="*"></a>', $mes);
+    $mes = preg_replace('#\[red\](.+?)\[\/red\]#si', '<span style="color: #f44336">\1</span>', $mes);
+    $mes = preg_replace('#\[green\](.+?)\[\/green\]#si', '<span style="color: #81c136">\1</span>', $mes);
+    $mes = preg_replace('#\[blue\](.+?)\[\/blue\]#si', '<span style="color: #2196f3">\1</span>', $mes);
+    $mes = preg_replace('~\[color=((?:#[a-fA-F0-9]{3,6})+)\](.+?)\[/color\]~s', '<span style="color: \1">\2</span>', $mes);
+    $mes = preg_replace('#\[code\](.+?)\[\/code\]#si', '<code>\1</code>', $mes);
+	
+	$mes = preg_replace('#\[url=(https?://[a-z0-9-]+\.+\S[^\'"(><]+?)*\](.+?)\[/url\]#i', '<a class="link_visual" target="_blank" href="$1">$2</a>', $mes);
+
+	$mes = preg_replace("~(^|\s|-|:| |\()(http(s?)://|(www\.))((\S{25})(\S{5,})(\S{15})([^\<\s.,>)\];'\"!?]))~i", "\\1<a class=\"link_visual\" target=\"_blank\" href=\"http\\3://\\4\\5\">\\4\\6...\\8\\9</a>", $mes);
     $mes = preg_replace("~(^|\s|-|:|\(| |\xAB)(http(s?)://|(www\.))((\S+)([^\<\s.,>)\];'\"!?]))~i", "\\1<a class=\"link_visual\" target=\"_blank\" href=\"http\\3://\\4\\5\">\\4\\5</a>", $mes);
 
     return nl2br($mes);
@@ -171,14 +239,29 @@ function smile($text, $show=false) {
 	if ($show) {
 		$smile_array = array_unique($smile_array, SORT_REGULAR);
 		foreach ($smile_array as $a => $i) { echo '<a onclick="tag(\''.$a.'\')">'.$i.'</a>'; }
+		return;
 	}
 
 	return strtr($text, $smile_array);
 }
 
 function img($file) {
-	 return '<img src="/design/styles/'.User::settings('theme').'/img/'.$file.'" alt="*" />';
+	return '<img src="/design/styles/'.User::settings('theme').'/img/'.$file.'" alt="*" />';
 }
+
+
+function delete_file($filename) {
+	try {
+	    if (file_exists($filename)) { 
+	        if (@unlink($filename) !== true)
+	            throw new Exception('Ошибка удаления файла');
+	    }
+	    return true;
+	} catch (Exception $e) {
+		error($e->getMessage());
+	}
+}
+
 
 function file_icon($path) {
 	$icon_dir = 'file_icon/';
@@ -190,7 +273,9 @@ function file_icon($path) {
 	$ext_array = array(
 		'zip' => img($icon_dir . 'zip.png'),
 		'rar' => img($icon_dir . 'rar.png'),
-		'txt' => img($icon_dir . 'txt.png')
+		'txt' => img($icon_dir . 'txt.png'),
+		'mp3' => img($icon_dir . 'mp3.png'),
+		'mp4' => img($icon_dir . 'mp4.png')
 	);
 
 	$result = $ext_array[$ext];

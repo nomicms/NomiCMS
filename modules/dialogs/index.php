@@ -16,9 +16,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `dialogs` where `kto` = '".Use
 
 if(!$posts){
 	$tmp->div('main', Language::config('no_dialogs'));
-    $tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-    $tmp->footer();
-	exit();
+    $tmp->home();
 }
 
 $total = intval((($posts-1)/$num)+1);
@@ -41,6 +39,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

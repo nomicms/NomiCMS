@@ -14,36 +14,36 @@ if(isset($_GET['id'])){
 	$id = my_int($_GET['id']);
 }
 
-$count = $db->fass_c("SELECT COUNT(*) as count FROM `friends` where `kto` = '".$id."' and `status` = '1' ORDER BY `id` DESC");
+$posts = $db->fass_c("SELECT COUNT(*) as count FROM friends, users WHERE friends.kto = '".$id."' and friends.status = 1 and friends.komy = users.id and users.date_last_entry > '".(time() - 360)."' ORDER BY users.id DESC");
 
-if ($count==0) {
+if ($posts==0) {
 	$tmp->friends_menu($id, 3);
 	$tmp->div('main', Language::config('no_friends_on'));
 	$tmp->footer();
-	exit();
 }
 
-$row = $db->query("SELECT * FROM `friends` where `kto` = '".$id."' and `status` = '1' ORDER BY `id` DESC");
+$total = (($posts-1)/$num)+1;
+$total = intval($total);
+$page = intval($page);
+if(empty($page) or $page<0) $page=1;
+if($page>$total) $page=$total;
+$start=$page*$num-$num;
+
 
 $tmp->friends_menu($id, 3);
 
+$row = $db->query("SELECT * FROM friends, users WHERE friends.kto = '".$id."' and friends.status = 1 and friends.komy = users.id and users.date_last_entry > '".(time() - 360)."' ORDER BY users.id DESC LIMIT ".$start.", ".$num."");
+
 echo '<div class="main">';
-
-while($friends = $row->fetch_assoc()) {
-	$online_user = $db->query("SELECT * FROM `users` WHERE `date_last_entry` > '".(time() - 360)."' and `id` ='".$friends['komy']."' ");
-	while($a = $online_user->fetch_assoc()) {
-		$s .= nick_new($a['id']);
-	}
+while($friend = $row->fetch_assoc()) {
+	echo nick_new($friend['id']);
 }
-
-if (!empty($s)) { echo $s; } else { echo Language::config('no_friends_on'); }
-
 echo '</div>';
 
+page('?');
+$tmp->footer();
 
 } else {
-	header('location: /');
+	go_exit();
 }
-
-$tmp->footer();
 ?>

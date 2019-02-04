@@ -38,18 +38,16 @@ if(isset($_GET['edit'])){
 			}
 		}
 
-	error($error);
+		error($error);
 
-	$tmp->div('main', '<form action="" method="post">
+		$tmp->div('main', '<form action="" method="post">
 '.Language::config('name').':<br/>
 <input name="name" value="'.$p['name'].'" /><br />
 '.Language::config('opis').'  :<br/>
 <textarea name="message">'.$p['message'].'</textarea><br/>
 <input type="submit" name="submit" value="'.Language::config('save').'" /></form>');
-	
-	$tmp->div('menu', '<hr><a href="/lib/c/l'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+
+		$tmp->back('lib/c/l'.$id);
 	}
 }
 
@@ -63,7 +61,5 @@ $tmp->div('main', Language::config('add_name').': '.nick_new($p['kto']).' '.(Use
 $count=$db->fass_c("SELECT COUNT(*) as count FROM `lib_comments` where `lib_r` = '".$id."' ");
 $tmp->div('menu', '<hr><a href="/lib/comment'.$p['id'].'">'.img('com.png').' '.Language::config('comments').' <span>'.$count.'</span></a>');
 
-
-$tmp->div('menu', '<hr><a href="/lib/c'.$p['category'].'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('lib/c'.$p['category']);
 ?>

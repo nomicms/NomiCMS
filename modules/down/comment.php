@@ -12,7 +12,9 @@ $tmp->header('comments');
 $tmp->title('title', '<a href="/zc/file'.$id.'">'.$s['name'].'</a>' . ' / ' . Language::config('comments'));
 User::panel();
 
-if(User::aut()){
+if(!User::aut()){
+	$tmp->need_auth('zc/file'.$id);
+}
 
 if (!$s) $tmp->show_error();
 
@@ -25,12 +27,10 @@ $start=$page*$num-$num;
 
 $n=$db->query("select * from `zc_comments` where `zc_file` = '".$id."' ORDER BY time DESC LIMIT ".$start.", ".$num."");
 
-$cid = (empty($cid) ? null : my_int($_GET['cid']));
-
-$p=$db->fass("select * from `zc_comments` where `id` = '".$cid."' ");
-
 if(User::ID() == $p['kto'] || User::level() >=3){
 	if(isset($_GET['del'])) {
+		$cid = my_int($_GET['cid']);
+		$p=$db->fass("select * from `zc_comments` where `id` = '".$cid."' ");
 
 		if (!$p) $tmp->show_error();
 
@@ -40,7 +40,13 @@ if(User::ID() == $p['kto'] || User::level() >=3){
 	}
 }
 
+
+reply_user('zc_comments', 'zc/comment', $id, 'zc_file');
+
+
 if(isset($_REQUEST['submit'])){
+	Security::verify_str();
+
 	$message = $db->guard($_POST['messages']);
 	
 	if(mb_strlen($message, 'UTF-8')<2) $error .= Language::config('no_message');
@@ -60,6 +66,7 @@ if(isset($_REQUEST['submit'])){
 	$tmp->div('main', '<form method="POST" name="message" action="">
 '.Language::config('message').':<br/>
 <textarea name="messages"></textarea><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
 
 if($posts==0){
@@ -68,17 +75,12 @@ if($posts==0){
 
 	echo '<div class="comments">';
 	while($zc_file=$n->fetch_assoc()) {
-		echo '<hr><div>'.nick_new($zc_file['kto']).' '.((User::ID() == $zc_file['kto'] || User::level() >=3) ? ' <a class="de" href="/zc/comment'.$id.'?del&cid='.$zc_file['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($zc_file['time']).'</span><br/>'.bb(smile($zc_file['message'])).'</div>';
+		echo '<hr><div>'.nick_new($zc_file['kto']).' '.((User::ID() == $zc_file['kto'] || User::level() >=3) ? ' <a class="de" href="/zc/comment'.$id.'/del'.$zc_file['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($zc_file['time']).'</span>'.($zc_file['kto'] != User::ID() ? '<a class="answer" href="comment'.$id.'/otv'.$zc_file['id'].'">'.img('answer.png').'</a>' : NULL ).' <br/>'.bb(smile($zc_file['message'])).'</div>';
 	}
 	echo '</div>';
 
 page('?');
 }
 
-} else {
-	$tmp->div('error', Language::config('need_auth'));
-}
-
-$tmp->div('menu', '<hr><a href="/zc/file'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('zc/file'.$id);
 ?>

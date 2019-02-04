@@ -27,8 +27,16 @@ if(isset($_GET['do'])) {
 if(isset($_GET['del'])){
 	if(User::aut()){
 		if(User::ID() == $p['kto'] || User::level() >= 3){
-			$db->query("DELETE FROM `zc_file` WHERE `id` = '".$id."' limit 1 ");
-			header('location: /zc/cat'.$p['category'].'/pc'.$p['section'].'');
+
+			if(isset($_GET['yes'])){
+				if (delete_file(R.'/files/zc/'.$p['file'])) {
+					$db->query("DELETE FROM `zc_file` WHERE `id` = '".$id."' limit 1 ");
+					header('location: /zc/cat'.$p['category'].'/pc'.$p['section'].'');
+				}
+			}
+
+			$tmp->del_sure($p['name'], 'del&yes');
+			$tmp->footer();	
 		}
 	}
 }
@@ -88,7 +96,6 @@ if(isset($_GET['edit'])){
 		
 		$tmp->div('menu', '<hr><a href="/zc/file'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
 		$tmp->footer();
-		exit();
 	}
 }
 
@@ -96,22 +103,27 @@ if(isset($_GET['edit'])){
 $tmp->div('title', $p['name']);
 echo ($p['opis'] ? '<hr><div class="main">'.bb(smile($p['opis'])). '</div>' : NULL );
 
-if(in_array(strtolower(explode('.', $p['file'])[1]), array('jpg', 'png', 'gif', 'jpeg'))){
+$ext_file = strtolower(explode('.', $p['file'])[1]);
+
+if(in_array($ext_file, array('jpg', 'png', 'gif', 'jpeg'))){
 	$tmp->div('main', '<a target="_blank" href="../files/zc/'.$p['file'].'"><img src="../files/zc/'.$p['file'].'" style="max-width: 210px; max-height: 210px;"/></a>');
+} elseif ($ext_file == 'mp3') {
+	$tmp->div('main', '<audio controls><source src="/files/zc/'.$p['file'].'" type="audio/mpeg"></audio>');
+} elseif ($ext_file == 'mp4') {
+	$tmp->div('main', '<video controls><source src="/files/zc/'.$p['file'].'" type="video/mp4"></video>');
 } else {
 	if(!empty($p['screen'])){
 		$tmp->div('main', '<a target="_blank" href="/files/zc/screen/'.$p['screen'].'"><img src="/files/zc/screen/'.$p['screen'].'" style="max-width: 100px; max-height: 100px;"/></a>');
 	}
 }
 
-$tmp->div('menu', '<a class="items" href="/zc/file'.$p['id'].'?do">'.img('down.png').' '.Language::config('down').' ('.format_filesize(R.'/files/zc/'.$p['file']).')</a>');
+$tmp->div('menu', '<a class="items" href="/zc/file'.$p['id'].'?do" '.($ext_file == 'mp3' || $ext_file == 'mp4' ? 'download' : NULL).'>'.img('down.png').' '.Language::config('down').' ('.format_filesize(R.'/files/zc/'.$p['file']).')</a>');
 
 $tmp->div('main', Language::config('add_name').': '.nick_new($p['kto']).' '.(User::level() >= 3 || User::ID() == $p['kto'] ? '<a class="de" href="/zc/file'.$p['id'].'?del">'.img('delete.png" style="width: inherit').'</a> <a class="de" href="/zc/file'.$p['id'].'?edit">'.img('edit.png" style="width: inherit').'</a>' : NULL).' <span class="times">'.times($p['time']).'</span><br>'.Language::config('downl').': '.$p['down']);
-	
+
 
 $count=$db->fass_c("SELECT COUNT(*) as count FROM `zc_comments` where `zc_file` = '".$id."'");
 $tmp->div('menu', '<hr><a href="/zc/comment'.$p['id'].'">'.img('com.png').' '.Language::config('comments').' <span>'.$count.'</span></a>');
 
-$tmp->div('menu', '<hr><a href="/zc/cat'.$p['category'].'/pc'.$p['section'].'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('zc/cat'.$p['category'].'/pc'.$p['section']);
 ?>

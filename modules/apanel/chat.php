@@ -58,7 +58,6 @@ if (User::level()>=3) {
 			$tmp->div('main', '<form method="POST" name="message" action="">'.Language::config('message').':<br/><textarea name="messages"></textarea><br /><input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
 			$tmp->div('menu', '<hr><a href="/apanel/admin_chat">'.img('link.png').' '.Language::config('back').'</a>');
 			$tmp->footer();
-			exit();
 		}
 	}
 
@@ -104,6 +103,5 @@ if (User::level()>=3) {
   go_exit();
 }
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->back('apanel');
 ?>

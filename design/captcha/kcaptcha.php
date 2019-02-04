@@ -22,7 +22,7 @@ class KCAPTCHA{
 	function __construct(){ // new PHP declaration
 		$alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 		$allowed_symbols = "23456789abcdegikpqsvxyz";
-		$fontsdir = '/design/fonts';	
+		$fontsdir = 'fonts';	
 		$length = mt_rand(3,5);
 		$width = 100;
 		$height = 45;
@@ -37,7 +37,7 @@ class KCAPTCHA{
 		$jpeg_quality = 90;
 
 		$fonts=array();
-		$fontsdir_absolute=R.'/'.$fontsdir;
+		$fontsdir_absolute=$fontsdir;
 		if ($handle = opendir($fontsdir_absolute)) {
 			while (false !== ($file = readdir($handle))) {
 				if (preg_match('/\.png$/i', $file)) {

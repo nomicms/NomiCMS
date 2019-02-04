@@ -28,12 +28,12 @@ if(User::aut()){
 
    		$db->query("INSERT INTO `friends` set `kto`=  '".User::ID()."', `komy` = '".$id."', `status` = '1' ");
    		$db->query("UPDATE `friends` set `status` = '1' where `id` = '".$id2."' ");
-        header('Location: /friends/bid');
+        go_exit('/friends/bid');
     }
 
 	error($error);
 } else {
-	header('location: /');
+	go_exit();
 }
 
 $tmp->footer();

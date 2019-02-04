@@ -33,7 +33,7 @@ if(User::aut() && User::level() >= 2){
 	}
 
 	$db->query("update `forum_topic` set `razdel` = '".$razdel."', `section` = '".$section."' where  `id` = '".$id."'");
-	$db->query("insert into `forum_message` set `razdel` = '".$razdel."', `section` = '".$section."', `topic` = '".$id."', `kto` = '".User::ID()."', `message` = 'Тема перенесена в раздел: [blue]".$s['name']."[/blue]', `time` = '".time()."' ");
+	$db->query("insert into `forum_message` set `razdel` = '".$razdel."', `section` = '".$section."', `topic` = '".$id."', `kto` = '".User::ID()."', `message` = '".Language::config('move_topic').": [blue]".$s['name']."[/blue]', `time` = '".time()."' ");
 	header('location: /forum/topic'.$id);
 }
 

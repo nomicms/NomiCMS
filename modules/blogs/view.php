@@ -33,18 +33,15 @@ if(isset($_GET['edit'])){
 			}
 		}
 
-	error($error);
+		error($error);
 
-	$tmp->div('main', '<form method="POST" action="">
+		$tmp->div('main', '<form method="POST" action="">
 '.Language::config('name_blog').': [100]<br/>
 <input type="text" name="name" value="'. $p['name'] .'" /><br/>
 '.Language::config('text').': <br/>
 <textarea name="text">'.$p['text'].'</textarea><br/>
 <input type="submit" name="submit" value="'.Language::config('edit').'" /></form>');
-	
-	$tmp->div('menu', '<hr><a href="/blogs/view'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+		$tmp->back('blogs/view'.$id);
 	}
 }
 
@@ -54,8 +51,5 @@ echo '<hr><div class="main">'.bb(smile($p['text'])).'</div><hr><div class="main"
 $count = $db->fass_c("select COUNT(*) as count from `blog_comms` where `blog_id` = '".$p['id']."' ");
 $tmp->div('menu', '<a href="/blogs/comment'.$p['id'].'">'.img('com.png').' '.Language::config('comments').' <span>'.$count.'</span></a>');
 
-
-$tmp->div('menu', '<hr><a href="/blogs">'.img('link.png').' '.Language::config('back').'</a>');
-
-$tmp->footer();
+$tmp->back('blogs');
 ?>

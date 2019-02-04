@@ -20,7 +20,6 @@ if ($posts==0) {
 	$tmp->friends_menu($id, 1);
 	$tmp->div('main', Language::config('no_friends'));
 	$tmp->footer();
-	exit();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -46,6 +45,6 @@ page('?');
 $tmp->footer();
 
 } else {
-	header('location: /');
+	go_exit();
 }
 ?>

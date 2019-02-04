@@ -55,7 +55,6 @@ if(User::aut()){
 			
 			$tmp->div('menu', '<hr><a href="/zc/cat'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
 			$tmp->footer();
-			exit();
 		}
 	}
 	
@@ -69,7 +68,6 @@ if(User::aut()){
 
 			$tmp->del_sure($p['name'], 'del&yes');
 			$tmp->footer();
-			exit();
 		 }
 	}
 }
@@ -78,9 +76,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `zc_section` where `category` 
 
 if($posts==0){
 	$tmp->div('main', Language::config('no_zc_section'));
-	$tmp->div('menu', '<hr><a href="/zc">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('zc');
 }
 
 $total = (($posts-1)/$num)+1;
@@ -100,6 +96,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/zc">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('zc');
 ?>

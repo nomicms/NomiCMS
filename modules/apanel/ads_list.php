@@ -41,6 +41,5 @@ if(!$posts) {
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/apanel">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('apanel');
 ?>

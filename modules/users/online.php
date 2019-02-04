@@ -16,7 +16,6 @@ if (isset($_GET['guests'])) {
 
 if(!$posts){
     $tmp->footer();
-	exit();
 }
 
 $total = (($posts-1)/$num)+1;
@@ -36,9 +35,7 @@ if (isset($_GET['guests'])) {
 		}
 
 		page('?guests&');
-		$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-		$tmp->footer();
-		exit();
+		$tmp->home();
 	}
 }
 
@@ -51,6 +48,5 @@ while($user=$u->fetch_assoc()) {
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-$tmp->footer();
+$tmp->home();
 ?>

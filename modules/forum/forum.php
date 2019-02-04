@@ -39,9 +39,7 @@ if(User::level() >=3){
 '.Language::config('pos').':<br/>
 <input type="text" name="pos" value="'.out($_POST['pos']).'" style="width: 60px" /><br/>
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
-		$tmp->div('menu', '<hr><a href="/forum/'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-		$tmp->footer();
-   		exit();
+   		$tmp->back('forum/'.$id);
 	}
 
 	if(isset($_GET['edit'])){
@@ -65,9 +63,7 @@ if(User::level() >=3){
 '.Language::config('pos').':<br/>
 <input type="text" name="pos" value="'.$p['pos'].'" style="width: 60px" /><br/>
 <input type="submit" name="submit" value="'.Language::config('save').'" /></form>');
-		$tmp->div('menu', '<hr><a href="/forum/'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-		$tmp->footer();
-   		exit();
+   		$tmp->back('forum/'.$id);
 	}
 
 	if(isset($_GET['d'])) {
@@ -81,7 +77,6 @@ if(User::level() >=3){
 
 		$tmp->del_sure($p['name'], 'd&yes');
 		$tmp->footer();
-		exit();
 	}
 	
 }
@@ -90,9 +85,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `forum_section` where `razdel`
 
 if($posts==0){
    $tmp->div('main', Language::config('no_sections'));
-   $tmp->div('menu', '<hr><a href="/forum">'.img('link.png').' '.Language::config('back').'</a>');
-   $tmp->footer();
-   exit();
+   $tmp->back('forum');
 }
 
 $total = (($posts-1)/$num)+1;
@@ -113,6 +106,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/forum">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('forum');
 ?>

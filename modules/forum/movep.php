@@ -36,9 +36,8 @@ if(User::aut() && User::level() >= 2){
 	    }
 	    echo '<hr>';
 	}
-
-	$tmp->div('menu', '<a href="/forum/topic'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
 }
 
+$tmp->div('menu', '<a href="/forum/topic'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
 $tmp->footer();
 ?>

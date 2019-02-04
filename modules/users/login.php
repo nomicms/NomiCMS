@@ -9,6 +9,9 @@ if(User::aut()){
 }
 
 if (isset($_REQUEST['submit'])) {
+
+	Security::verify_str();
+
 	$login = $db->guard($_POST['login']);
 	
 	if(empty($_POST['login'])) $error .= Language::config('no_empty_login').'<br/>';
@@ -42,7 +45,9 @@ echo '<div class="main"><form action="/login" method="POST">
 <input type="text" name="login" /><br/>
 '.Language::config('pass').':<br/>
 <input type="password" name="password" /><br/>
-<input class="button" type="submit" value="Войти" name="submit" /></form></div>';
-$tmp->footer();
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
+<input class="button" type="submit" value="Войти" name="submit" /></form></div>
+<hr><div class="menu"><a href="/restore">'.img('settings.png').' '.Language::config('restore').'</a></div>';
 
+$tmp->footer();
 ?>

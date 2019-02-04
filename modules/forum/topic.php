@@ -46,12 +46,13 @@ if(User::level() >= 2){
 		if($p['is_close_topic'] != 1){
 			if(isset($_REQUEST['submit'])){		
 				$name = $db->guard($_POST['name']);
+				$message = $db->guard($_POST['message']);
 				
-				if(empty($_POST['name']) || mb_strlen($_POST['name'], 'UTF-8')<2) $error .= Language::config('no_message');
+				if(empty($name) || empty($message)) $error .= Language::config('no_message');
 
 				if(!isset($error)){
 					if($p['is_close_topic'] != 1)
-						$db->query("update `forum_topic` set  `name` = '".$name."' where `id` = '".$id."' ");
+						$db->query("UPDATE `forum_topic` SET `name` = '".$name."', `message` = '".$message."' WHERE `id` = '".$id."' ");
 					header('location: /forum/topic'.$id);
 				}
 			}
@@ -60,21 +61,25 @@ if(User::level() >= 2){
 		$tmp->div('main', '<form method="POST" action="">
 '.Language::config('name').': <br/>
 <input type="text" name="name" value="'.$p['name'].'" /><br/>
-<input type="submit" name="submit" value="'.Language::config('save').'" /></form>');
+'.Language::config('message').':<br/>
+<textarea name="message">'.$p['message'].'</textarea><br />
+<input type="submit" name="submit" value="'.Language::config('edit').'" /></form>');
 		} else {
 			header('location: /forum/topic'.$id);
 		}
+
+		$tmp->back('forum/topic'.$id);
 	}
 
 	if(isset($_GET['del'])){
 		if(isset($_GET['yes'])){
 			$db->query("DELETE FROM `forum_topic` where `id` = '".$id."'");
+			$db->query("DELETE FROM `forum_message` where `topic` = '".$id."'");
 			header('location: /forum/'.$p['razdel'].'/'.$p['section']);
 		}
 
  		$tmp->del_sure($p['name'], 'del&yes');
 		$tmp->footer();
-		exit();
 	}
 }
 
@@ -93,6 +98,9 @@ if(User::level() >= 3){
 }
 
 if(isset($_REQUEST['submit'])){
+	
+	Security::verify_str();
+
 	$message = $db->guard($_POST['messages']);
 	$ant=$db->fass("SELECT * FROM `forum_message` where `kto` = '".User::ID()."' and `message` = '".$message."' and `time` > '".(time() - 3)."' limit 1");
 
@@ -149,36 +157,36 @@ if(User::level() >= 2) {
 	$tmp->div('adm_menu flex', '<a title="'.Language::config('edit').'" href="/forum/topic'.$id.'?edit">'.img('t_edit.png').'</a> '.(($p['is_top_topic'] == 0) ? '<a title="'.Language::config('top').'" href="/forum/topic'.$id.'?top">'.img('t_pin.png').'</a>' : '<a title="'.Language::config('no_top').'" href="/forum/topic'.$id.'?notop">'.img('t_unpin.png').'</a>'). ' <a title="'.Language::config('move').'" href="/forum/movep'.$id.'">'.img('t_move.png').'</a> <a title="'.Language::config('delet').'" href="/forum/topic'.$id.'?del">'.img('t_del.png').'</a>');
 }
 
-if(!$posts){
-	$tmp->div('main', Language::config('no_messages'));
-	$tmp->div('menu', '<hr><a href="/forum/'.$p['razdel'].'/'.$p['section'].'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
-}
+
+echo '<div class="messages"><div>'.nick_new($p['kto']).'<br>'.bb(smile($p['message'])).'</div></div>';
 
 $f=$db->query("SELECT * FROM `forum_message` where `topic` = '".$id."' ORDER BY time ASC LIMIT ".$start.", ".$num." ");
 
-echo '<div class="messages">';
-while($fo=$f->fetch_assoc()){
-	echo '<hr><div>'.nick_new($fo['kto']).' '.((User::aut() && $p['is_close_topic'] != 1 && ($fo['kto'] == User::ID() || User::level() >=3)) ? (($fo['time'] + 60 < time() && User::level() <= 2) ? NULL : '<a class="mkey" href="/forum/topic'.$id.'/edit_post'.$fo['id'].'">'.img('ed.png').'</a>') .(User::level() >=3 ? '<a class="de" href="/forum/topic'.$id.'/delete'.$fo['id'].'">'.img('delete.png').'</a>' : NULL) : NULL).'<span class="times">'. times($fo['time']).'</span>';
+if (!empty($f)) {
 
-	echo ((User::aut() && $fo['kto'] != User::ID() && $p['is_close_topic'] != 1) ? ' <a class="answer" href="/forum/topic'.$id.'/replay'.$fo['id'].'">'.img('answer.png').'</a> <a class="answer" href="/forum/topic'.$id.'/quote'.$fo['id'].'">'.img('cit.png').'</a>' : NULL );
+	echo '<hr><div class="messages">';
+	while($fo=$f->fetch_assoc()){
+		echo '<hr><div>'.nick_new($fo['kto']).' '.((User::aut() && $p['is_close_topic'] != 1 && ($fo['kto'] == User::ID() || User::level() >=3)) ? (($fo['time'] + 60 < time() && User::level() <= 2) ? NULL : '<a class="mkey" href="/forum/topic'.$id.'/edit_post'.$fo['id'].'">'.img('ed.png').'</a>') .(User::level() >=3 ? '<a class="de" href="/forum/topic'.$id.'/delete'.$fo['id'].'">'.img('delete.png').'</a>' : NULL) : NULL).'<span class="times">'. times($fo['time']).'</span>';
 
-	echo ($fo['quote'] ? '<div class="cit"><span class="rep">'.$fo['user_quote'].'</span> '.bb(smile(mb_strimwidth($fo['quote'], 0, 140, "..."))).'</div>'.bb(smile($fo['message'])) : '<br>'.bb(smile($fo['message'])));
+		echo ((User::aut() && $fo['kto'] != User::ID() && $p['is_close_topic'] != 1) ? ' <a class="answer" href="/forum/topic'.$id.'/replay'.$fo['id'].'">'.img('answer.png').'</a> <a class="answer" href="/forum/topic'.$id.'/quote'.$fo['id'].'">'.img('cit.png').'</a>' : NULL );
 
-	$filec = $db->n_r("select id from `forum_file` where `post_id` = '".$fo['id']."' limit 1");
-	if($filec){
-		$file = $db->query("select * from `forum_file` where `post_id` = '".$fo['id']."'");
-		echo '<div class="files">';
-		while($files = $file->fetch_assoc()){
-			if($files['post_id'] == $fo['id'])
-				echo  '<a href="/files/forum/'.$files['name'].'">'.img('down_s.png').' '.$files['name'].' | '.format_filesize(R.'/files/forum/'.$files['name']).'</a><br>';
+		echo ($fo['quote'] ? '<div class="cit"><span class="rep">'.$fo['user_quote'].'</span> '.bb(smile(mb_strimwidth($fo['quote'], 0, 140, "..."))).'</div>'.bb(smile($fo['message'])) : '<br>'.bb(smile($fo['message'])));
+
+		$filec = $db->n_r("select id from `forum_file` where `post_id` = '".$fo['id']."' limit 1");
+		if($filec){
+			$file = $db->query("select * from `forum_file` where `post_id` = '".$fo['id']."'");
+			echo '<div class="files">';
+			while($files = $file->fetch_assoc()){
+				if($files['post_id'] == $fo['id'])
+					echo  '<a href="/files/forum/'.$files['name'].'">'.img('down_s.png').' '.$files['name'].' | '.format_filesize(R.'/files/forum/'.$files['name']).'</a><br>';
+			}
+			echo '</div>';
 		}
 		echo '</div>';
 	}
 	echo '</div>';
+
 }
-echo '</div>';
 
 
 if(User::aut()){
@@ -191,6 +199,7 @@ if(User::aut()){
 <textarea name="messages"></textarea><br />
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('send').'" /></form></div>';
 	}
 }

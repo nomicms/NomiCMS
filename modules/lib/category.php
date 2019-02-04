@@ -20,6 +20,8 @@ if (!$p) $tmp->show_error();
 if(isset($_GET['d'])){
 
 	if(isset($_REQUEST['submit'])){
+		Security::verify_str();
+		
 		$name = $db->guard($_POST['name']);
 		$opis = $db->guard($_POST['opis']);
 		$whitelist = array('.txt'); # Допустимые расширения
@@ -70,11 +72,10 @@ $_POST['opis'] = (empty($_POST['name']) ? null : $_POST['opis']);
 '.Language::config('file').':<br/>
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('add').'" /></form>');
 
-	$tmp->div('menu', '<hr><a href="/lib/c'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('lib/c'.$id);
 }
 
 if(User::level() >= 3){
@@ -87,7 +88,6 @@ if(User::level() >= 3){
 
 		$tmp->del_sure($p['name'], 'del&yes');
 		$tmp->footer();
-		exit();
 	}
 }
 
@@ -98,9 +98,7 @@ if($posts==0){
 	if(User::aut()){
 		$tmp->div('menu', '<a class="items" href="/lib/c'.$p['id'].'?d">'.img('add_i.png').' '.Language::config('add_lib_r').'</a>');
 	}	
-	$tmp->div('menu', '<hr><a href="/lib">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('lib');
 }
 
 $total = (($posts-1)/$num)+1;
@@ -124,6 +122,5 @@ echo '</div>';
 
 page('?');
 
-$tmp->div('menu', '<hr><a href="/lib">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('lib');
 ?>

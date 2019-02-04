@@ -41,13 +41,12 @@ upload_file();
 
 $b=$db->query("select * from `users` where `id` = '".User::ID()."' ")->fetch_assoc();
 
-echo '<div class="main">'.(empty($b['ava']) ? '<img src="files/ava/no_ava.jpg" style="width: 100%; max-width: 210px; max-height: 210px;">' : ava($b)).'
+echo '<div class="main">'.(empty($b['ava']) ? '<img class="ava_orig" src="files/ava/no_ava.jpg" alt="*">' : ava($b)).'
 <form action="" enctype="multipart/form-data" method="POST">
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
 <input type="submit" name="send" value="Загрузить"/>
 </form></div>';
 
-$tmp->div('menu', '<hr><a href="/edit">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('edit');
 ?>

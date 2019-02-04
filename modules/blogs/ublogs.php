@@ -14,9 +14,7 @@ $posts=$db->fass_c("SELECT COUNT(*) as count FROM `blogs` where `kto` = '".$id."
 
 if(!$posts){
 	$tmp->div('main', Language::config('no_blogs'));
-	$tmp->div('menu', '<hr><a href="/us'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-	$tmp->footer();
-	exit();
+	$tmp->back('us'.$id);
 }
 
 $total = (($posts-1)/$num)+1;

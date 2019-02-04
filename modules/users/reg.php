@@ -66,9 +66,7 @@ if(isset($_POST['submit'])) {
         setcookie('password', $password, time()+60*60*24*1024, '/');
 
         $tmp->div('success', Language::config('reg_ok'));
-        $tmp->div('menu', '<a href="/">'.img('link.png').' '.Language::config('home').'</a>');
-        $tmp->footer();
-        exit();
+        $tmp->home();
     }
 }
 error($error);
@@ -88,12 +86,8 @@ $tmp->div('main', '<form method="POST" action="">
 <input type="text" name="name" value="'. out($_POST['name']) .'" /><br/>
 '.Language::config('sex').': <br/>
 <select name="sex"><option value="1">'.Language::config('men').'</option><option value="0">'.Language::config('wom').'</option></select><br/>
-<script>
-function captcha_reload() {
-	document.getElementById(\'captcha\').src = "/system/kcaptcha.php?" + Math.random();
-}
-</script>
-<a href="javascript:captcha_reload();"><img id="captcha" width="100" src="/system/kcaptcha.php" /></a><br /><input type="text" name="captcha" size="7" maxlength="5" autocomplete="off" /><br/>
+<img onclick="this.src=\'/design/captcha/kcaptcha.php?\'+Math.random()" id="captcha" src="/design/captcha/kcaptcha.php" /><br />
+<input type="text" name="captcha" size="7" maxlength="5" autocomplete="off" /><br/>
 <input type="submit" name="submit" value="'.Language::config('reg').'" /></form>');
 
 $tmp->footer();

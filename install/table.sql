@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `ads` (
   `time` int(11) NOT NULL,
   `time_end` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `ban` (
   `time_end` int(11) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -41,8 +41,9 @@ CREATE TABLE IF NOT EXISTS `dialogs` (
   `kto` int(11) NOT NULL,
   `komy` int(11) NOT NULL,
   `time_last` int(11) NOT NULL DEFAULT '0',
+  `ignor` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -58,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `dialogs_message` (
   `message` text NOT NULL,
   `readln` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -73,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `dialogs_file` (
   `mess_id` int(11) NOT NULL,
   `name` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `forum_file` (
   `thema` int(11) NOT NULL,
   `name` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `forum_message` (
   `quote` varchar(1024) NOT NULL DEFAULT '',
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -120,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `forum_razdel` (
   `name` varchar(255) NOT NULL,
   `pos` int(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -134,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `forum_section` (
   `razdel` int(11) NOT NULL,
   `pos` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -148,12 +149,13 @@ CREATE TABLE IF NOT EXISTS `forum_topic` (
   `section` int(11) NOT NULL,
   `kto` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `message` text NOT NULL DEFAULT '',
   `time` int(11) NOT NULL,
   `last_message_time` int(11) NOT NULL,
   `is_top_topic` int(11) NOT NULL DEFAULT '0',
   `is_close_topic` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -167,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `guests` (
   `browser` text NOT NULL,
   `time` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 
 -- --------------------------------------------------------
@@ -185,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `journal` (
   `url` varchar(255) NOT NULL,
   `readln` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -198,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `lib_category` (
   `name` varchar(32) NOT NULL,
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -213,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `lib_comments` (
   `message` varchar(1024) NOT NULL,
   `lib_r` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -231,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `lib_r` (
   `look` int(11) NOT NULL DEFAULT '0',
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -245,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `time` int(11) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -259,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `admin_chat` (
   `time` int(11) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -273,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `module` (
   `open` int(11) NOT NULL,
   `counter` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -288,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `name` varchar(255) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -303,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `news_comments` (
   `message` varchar(1024) NOT NULL,
   `news` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -319,8 +321,10 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `close` int(11) NOT NULL DEFAULT '0',
   `keywords` text NOT NULL,
   `description` text NOT NULL,
+  `smtp` text NOT NULL DEFAULT '',
+  `counters` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -345,7 +349,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `name` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL DEFAULT '',
   `sex` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL DEFAULT '',
   `tg` varchar(40) NOT NULL DEFAULT '',
   `money` int(11) NOT NULL DEFAULT '1000',
   `date_registration` int(11) NOT NULL,
@@ -354,11 +357,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   `country` varchar(255) NOT NULL DEFAULT '',
   `city` varchar(255) NOT NULL DEFAULT '',
   `about` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `email_c` INT(1) NOT NULL DEFAULT '0',
   `browser` varchar(255) NOT NULL DEFAULT '',
   `ip` varchar(20) NOT NULL DEFAULT '',
   `browser_type` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -373,7 +378,25 @@ CREATE TABLE IF NOT EXISTS `user_settings` (
   `theme` varchar(255) NOT NULL,
   `num` int(11) NOT NULL DEFAULT '10',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users_emails`
+--
+
+CREATE TABLE IF NOT EXISTS `users_emails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `text` text NOT NULL,
+  `code` varchar(15) NOT NULL,
+  `us` int(11) NOT NULL,
+  `valid` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `time_end` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -387,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `zc_category` (
   `opis` text NOT NULL,
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -402,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `zc_comments` (
   `message` varchar(1024) NOT NULL,
   `zc_file` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -424,7 +447,7 @@ CREATE TABLE IF NOT EXISTS `zc_file` (
   `pin` int(11) NOT NULL DEFAULT '0',
   `hide` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -438,10 +461,10 @@ CREATE TABLE IF NOT EXISTS `zc_section` (
   `name` varchar(255) NOT NULL,
   `whitelist` text NOT NULL,
   `max_size` int(11) NOT NULL,
-  `hide_files` int(11) NOT NULL,
+  `hide_files` int(11) NOT NULL DEFAULT '0',
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -451,7 +474,7 @@ CREATE TABLE `friends` (
   `komy` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -466,7 +489,7 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   `time` int(32) NOT NULL,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -481,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `blog_comms` (
   `blog_id` int(32) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -496,5 +519,5 @@ CREATE TABLE IF NOT EXISTS `wall` (
   `message` text NOT NULL,
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci AUTO_INCREMENT=1 ;
 

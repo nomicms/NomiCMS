@@ -13,6 +13,8 @@ if(!User::aut()){
 User::panel();
 
 if (isset($_REQUEST['submit'])) {
+	Security::verify_str();
+
 	$num = my_int($db->guard($_POST['num']));
 	$language = $db->guard($_POST['language']);
 	$theme = $db->guard($_POST['theme']);
@@ -76,8 +78,8 @@ echo '</select></div><hr><div class="main">
 <input type="text" name="pass" /><br/>
 '.Language::config('pass2').': <br/>
 <input type="text" name="pass2" /><br/>
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('save').'" /></div></form>';
 
-$tmp->div('menu', '<hr><a href="/panel">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('panel');
 ?>

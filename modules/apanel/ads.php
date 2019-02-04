@@ -45,6 +45,5 @@ Language::config('local').'<br/>
 	go_exit();
 }
 
-$tmp->div('menu', '<hr><a href="/apanel/ads_list">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('apanel/ads_list');
 ?>

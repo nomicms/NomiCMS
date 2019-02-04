@@ -83,10 +83,7 @@ if(User::aut()){
 <input name="file" type="file" id="file" onchange="uploadFile(this)">
 <label class="select_file" for="file">'.img('file.png').'<span>'.Language::config('select_file').'</span></label><br />
 <input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
-		
-			$tmp->div('menu', '<hr><a href="/forum/topic'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-			$tmp->footer();
-			exit();
+			$tmp->back('forum/topic'.$id);
 		}
 	}
 

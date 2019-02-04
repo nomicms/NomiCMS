@@ -12,7 +12,9 @@ $tmp->header('comments');
 $tmp->title('title', '<a href="/blogs/view'.$id.'">'.Language::config('blogs').'</a>' . ' / ' . Language::config('comments'));
 User::panel();
 
-if(User::aut()){
+if(!User::aut()){
+	$tmp->need_auth('zc/file'.$id);
+}
 
 if (!$s) $tmp->show_error();
 
@@ -24,14 +26,12 @@ if($page>$total) $page=$total;
 $start=$page*$num-$num;
 $n=$db->query("select * from `blog_comms` where `blog_id` = '".$id."' ORDER BY time DESC LIMIT ".$start.", ".$num."");
 
-$cid = (empty($cid) ? null : my_int($_GET['cid']));
-
-$p=$db->fass("select * from `blog_comms` where `id` = '".$cid."' ");
 
 if(User::ID() == $p['kto'] || User::level() >=3) {
-
 	if(isset($_GET['del'])) {
-		
+		$cid = my_int($_GET['cid']);
+		$p=$db->fass("select * from `blog_comms` where `id` = '".$cid."' ");
+
 		if (!$p) $tmp->show_error();
 
 		if($p['kto'] == User::ID() || User::level() >=3)
@@ -41,7 +41,12 @@ if(User::ID() == $p['kto'] || User::level() >=3) {
 }
 
 
+reply_user('blog_comms', 'blogs/comment', $id, 'blog_id');
+
+
 if(isset($_REQUEST['submit'])) {
+	Security::verify_str();
+	
 	$message = $db->guard($_POST['messages']);
 	
 	if(mb_strlen($message, 'UTF-8')<2) $error .= Language::config('no_message');
@@ -61,6 +66,7 @@ bbcode();
 $tmp->div('main', '<form method="POST" name="message" action="">
 '.Language::config('message').':<br/>
 <textarea name="messages"></textarea><br />
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('send').'" /></form>');
 
 if($posts==0) {
@@ -69,17 +75,12 @@ if($posts==0) {
 	
 	echo '<div class="comments">';
 	while($blog_comms=$n->fetch_assoc()) {
-		echo '<hr><div>'.nick_new($blog_comms['kto']).' '.((User::ID() == $blog_comms['kto'] || User::level() >=3) ? ' <a class="de" href="/blogs/comment'.$id.'?del&cid='.$blog_comms['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($blog_comms['time']).'</span><br/>'.bb(smile($blog_comms['message'])).'</div>';
+		echo '<hr><div>'.nick_new($blog_comms['kto']).' '.((User::ID() == $blog_comms['kto'] || User::level() >=3) ? ' <a class="de" href="/blogs/comment'.$id.'/del'.$blog_comms['id'].'">'.img('delete.png').'</a>' : NULL).'<span class="times">'.times($blog_comms['time']).'</span>'.($blog_comms['kto'] != User::ID() ? '<a class="answer" href="comment'.$id.'/otv'.$blog_comms['id'].'">'.img('answer.png').'</a>' : NULL ).' <br/>'.bb(smile($blog_comms['message'])).'</div>';
 	}
 	echo '</div>';
 
 page('?');
 }
 
-} else {
-	$tmp->div('error', Language::config('need_auth'));
-}
-
-$tmp->div('menu', '<hr><a href="/blogs/view'.$id.'">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+$tmp->back('blogs/view'.$id);
 ?>

@@ -11,6 +11,43 @@ if(User::level() < 3){
 	go_exit();
 }
 
+if(isset($_GET['smtp'])) {
+	$a = Core::config('smtp');
+
+	if (!empty($a)) {
+		$ex = explode('#', $a);
+		$email = $ex[0];
+		$uid = $ex[1];
+		$secret = $ex[2];
+	}
+
+	if (isset($_REQUEST['submit'])) {
+		$email = $db->guard($_POST['email']);
+		$uid = $db->guard($_POST['uid']);
+		$secret = $db->guard($_POST['secret']);
+
+		$smtp = (empty($email) || empty($uid) || empty($secret) ? NULL : implode('#', array($email, $uid, $secret)));
+
+		$db->query("UPDATE `settings` SET `smtp` = '".$db->escape($smtp)."' WHERE `id`='1' ");
+		$tmp->div('success', Language::config('ok_save'));
+	}
+
+	echo '<div class="main"># Settings <br>
+# <a class="link_visual" target="_blank" href="https://login.sendpulse.com/settings/#api">https://login.sendpulse.com/settings/#api</a> </div><hr>
+<div class="main">
+<form method="POST" action="">
+Email: <br/>
+<input type="text" name="email" value = "'.$email.'" /><br/>
+ID: <br/>
+<input type="text" name="uid" value = "'.$uid.'" /><br/>
+Secret: <br/>
+<input type="text" name="secret" value = "'.$secret.'" /><br/>
+<input type="submit" name="submit" value="'.Language::config('save').'" /></form></div>';
+
+	$tmp->back('apanel/settings');
+}
+
+
 if (isset($_REQUEST['submit'])) {
 
 	Security::verify_str();  
@@ -21,11 +58,12 @@ if (isset($_REQUEST['submit'])) {
 	$num = $db->guard($_POST['num']);
 	$theme = $db->guard($_POST['theme']);
 	$close = ($db->guard($_POST['open_site']) ? 1 : 0);
+	$counters = $_POST['counters'];
 
 	if (empty($num)) $error .= Language::config('error');
 
 	if(!isset($error)){
-		$db->query("UPDATE `settings` set `language` = '".$db->escape($language)."', `keywords` = '".$db->escape($keywords)."', `description` = '".$db->escape($description)."', `num` = '".$db->escape($num)."', `theme` = '".$db->escape($theme)."', `close` = '".$db->escape($close)."' WHERE `id`='1' ");
+		$db->query("UPDATE `settings` set `language` = '".$db->escape($language)."', `keywords` = '".$db->escape($keywords)."', `description` = '".$db->escape($description)."', `num` = '".$db->escape($num)."', `theme` = '".$db->escape($theme)."', `close` = '".$db->escape($close)."', `counters` = '".$db->escape($counters)."' WHERE `id`='1' ");
 		$tmp->div('success', Language::config('ok_save'));
 	}
 }
@@ -64,10 +102,15 @@ Keywords: <br/>
 <input type="text" name="keywords" value = "'.$a['keywords'].'" /><br/>
 Description: <br/>
 <input type="text" name="description" value = "'.$a['description'].'" /><br/>
-<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 
+'.Language::config('counters').': <br/>
+<textarea name="counters" style="width: 194px;height: 32px;min-height: 32px" />'.out($a['counters']).'</textarea><br />
+
+<input type="hidden" name="S_Code" value="'.Security::rand_str().'">
 <input type="submit" name="submit" value="'.Language::config('save').'" /></form></div>';
 
-$tmp->div('menu', '<hr><a href="/apanel">'.img('link.png').' '.Language::config('back').'</a>');
-$tmp->footer();
+if (file_exists(R.'/__API-SMTP__'))
+	$tmp->div('menu', '<hr><a href="?smtp">'.img('send_mail.png').' '.Language::config('settings_smtp').' </a>');
+
+$tmp->back('apanel');
 ?>

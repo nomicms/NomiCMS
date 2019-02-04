@@ -16,7 +16,6 @@ if ($posts==0) {
 	$tmp->friends_menu(User::ID(), 2);
 	$tmp->div('main', Language::config('no_bid'));
 	$tmp->footer();
-	exit();
 }
 
 $total = (($posts-1)/$num)+1;
