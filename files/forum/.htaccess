@@ -1,0 +1,4 @@
+<FilesMatch "\.(php|php3|php4|php5|php6|php7|html|html|xhtml)$">
+DefaultType none
+ForceType text/plain
+</FilesMatch>

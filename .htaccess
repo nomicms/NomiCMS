@@ -1,0 +1,92 @@
+	#Кодировка#
+AddDefaultCharset utf-8
+	#Директория#
+DirectoryIndex index.php
+Options -Indexes
+php_value date.timezone "Europe/Moscow"
+
+RewriteEngine On
+	#Разные реврайты#
+RewriteRule ^login?$ modules/users/login.php [L] 
+RewriteRule ^reg?$ modules/users/reg.php [L] 
+RewriteRule ^online?$ modules/users/online.php [L] 
+RewriteRule ^exit?$ modules/users/exit.php [L]
+RewriteRule ^news/?$ modules/news/index.php [L]
+RewriteRule ^news/comment([0-9]*)/?$ modules/news/comment.php?id=$1 [L,QSA] 
+	#Реврайты для профиль и всё что с ним связаное#
+RewriteRule ^chat/?$ modules/chat/index.php [L] 
+RewriteRule ^chat/del([0-9]*)/?$ modules/chat/index.php?del=$1 [L,QSA] 
+RewriteRule ^chat/otv([0-9]*)/?$ modules/chat/index.php?otv=$1 [L,QSA] 
+RewriteRule ^chat/([0-9]*)/?$ modules/chat/index.php?ms=$1 [L,QSA] 
+RewriteRule ^panel?$ modules/users/cab.php [L] 
+RewriteRule ^pages/?$ modules/pages/index.php [L] 
+RewriteRule ^pages/bb_codes?$ modules/pages/bb_codes.php [L] 
+RewriteRule ^pages/smile?$ modules/pages/smile.php [L] 
+RewriteRule ^pages/ads?$ modules/pages/ads.php [L] 
+RewriteRule ^apanel/?$ modules/apanel/index.php [L] 
+RewriteRule ^apanel/uedit([0-9]*)?$ modules/apanel/uedit.php?id=$1 [L,QSA] 
+RewriteRule ^apanel/news?$ modules/apanel/news.php [L] 
+RewriteRule ^apanel/ads?$ modules/apanel/ads.php [L] 
+RewriteRule ^apanel/ads_list?$ modules/apanel/ads_list.php [L] 
+RewriteRule ^apanel/ads_list/del([0-9]*)/?$ modules/apanel/ads_list.php?del=$1 [L,QSA] 
+RewriteRule ^apanel/settings?$ modules/apanel/settings.php [L] 
+RewriteRule ^apanel/news/del([0-9]*)/?$ modules/apanel/news.php?del=$1 [L,QSA] 
+RewriteRule ^apanel/news/edit([0-9]*)/?$ modules/apanel/news.php?edit=$1 [L,QSA] 
+RewriteRule ^apanel/ban_list/del([0-9]*)/?$ modules/apanel/ban_list.php?del=$1 [L,QSA] 
+RewriteRule ^apanel/ban_list/?$ modules/apanel/ban_list.php [L] 
+RewriteRule ^apanel/ban([0-9]*)/?$ modules/apanel/ban.php?id=$1 [L,QSA] 
+RewriteRule ^apanel/admin_chat/?$ modules/apanel/chat.php [L] 
+RewriteRule ^apanel/admin_chat/del([0-9]*)/?$ modules/apanel/chat.php?del=$1 [L,QSA] 
+RewriteRule ^apanel/admin_chat/otv([0-9]*)/?$ modules/apanel/chat.php?otv=$1 [L,QSA] 
+RewriteRule ^apanel/admin_chat/([0-9]*)/?$ modules/apanel/chat.php?ms=$1 [L,QSA] 
+RewriteRule ^edit?$ modules/users/edit.php [L] 
+RewriteRule ^ava?$ modules/users/ava.php [L] 
+RewriteRule ^people?$ modules/users/people.php [L] 
+RewriteRule ^journal?$ modules/users/journal.php [L] 
+RewriteRule ^us([0-9]*)/?$ modules/users/profile.php?id=$1 [L,QSA] 
+RewriteRule ^us([0-9]*)/delete([0-9]*)?$ modules/users/delete.php?id=$1&delete=$2 [L,QSA]
+RewriteRule ^settings?$ modules/users/settings.php [L] 
+RewriteRule ^dialogs/?$ modules/dialogs/index.php [L] 
+RewriteRule ^dialogs/dialogs([0-9]*)/?$ modules/dialogs/dialogs.php?id=$1 [L,QSA] 
+	#Реврайты для форума#
+RewriteRule ^forum/?$ modules/forum/index.php [L]
+RewriteRule ^forum/([0-9]*)/?$ modules/forum/forum.php?id=$1 [L,QSA]      
+RewriteRule ^forum/([0-9]*)/([0-9]*)/?$ modules/forum/section.php?idr=$1&id=$2 [L,QSA]
+RewriteRule ^forum/([0-9]*)/([0-9]*)/?$ modules/forum/section.php?idr=$1&id=$2 [L,QSA]
+RewriteRule ^forum/movep([0-9]*)/?$ modules/forum/movep.php?id=$1 [L,QSA]
+RewriteRule ^forum/topic([0-9]*)/?$ modules/forum/topic.php?id=$1 [L,QSA]
+RewriteRule ^forum/topic([0-9]*)/quote([0-9]*)?$ modules/forum/quote.php?id=$1&quote=$2 [L,QSA]
+RewriteRule ^forum/topic([0-9]*)/replay([0-9]*)?$ modules/forum/replay.php?id=$1&replay=$2 [L,QSA]
+RewriteRule ^forum/topic([0-9]*)/delete([0-9]*)?$ modules/forum/delete.php?id=$1&delete=$2 [L,QSA]
+RewriteRule ^forum/topic([0-9]*)/edit_post([0-9]*)?$ modules/forum/edit_post.php?id=$1&edit_post=$2 [L,QSA]
+RewriteRule ^forum/move([0-9]*)/section([0-9]*)/razdel([0-9]*)?$ modules/forum/move.php?id=$1&section=$2&razdel=$3 [L,QSA]
+	#Реврайты для библиотеки#
+RewriteRule ^lib/c([0-9]*)/?$ modules/lib/category.php?id=$1 [L,QSA]      
+RewriteRule ^lib/c([0-9]*)/l([0-9]*)/?$ modules/lib/look.php?cid=$1&id=$2 [L,QSA]      
+RewriteRule ^lib/comment([0-9]*)/?$ modules/lib/comment.php?id=$1 [L,QSA]      
+RewriteRule ^lib/?$ modules/lib/index.php [L]      
+	#Реврайты для загруз-центра#
+RewriteRule ^zc/?$ modules/down/index.php [L]      
+RewriteRule ^zc/file([0-9]*)?$ modules/down/file.php?id=$1 [L,QSA]      
+RewriteRule ^zc/comment([0-9]*)?$ modules/down/comment.php?id=$1 [L,QSA]      
+RewriteRule ^zc/cat([0-9]*)/?$ modules/down/category.php?id=$1 [L,QSA]      
+RewriteRule ^zc/cat([0-9]*)/pc([0-9]*)/?$ modules/down/section.php?cid=$1&id=$2 [L,QSA]      
+	#Реврайты для friends#
+RewriteRule ^friends([0-9]*)/?$ modules/friends/index.php?id=$1 [L,QSA]
+RewriteRule ^friends/add([0-9]*)?$ modules/friends/add.php?id=$1 [L,QSA]   
+RewriteRule ^friends/bid?$ modules/friends/bid.php [L]   
+RewriteRule ^friends/bid_yes([0-9]*)/([0-9]*)/?$ modules/friends/bid_yes.php?id=$1&id2=$2 [L,QSA]   
+RewriteRule ^friends/bid_no([0-9]*)/([0-9]*)/?$ modules/friends/bid_no.php?id=$1&id2=$2 [L,QSA]   
+RewriteRule ^friends/online([0-9]*)/?$ modules/friends/online.php?id=$1 [L,QSA]
+RewriteRule ^friends/delete([0-9]*)/?$ modules/friends/delete.php?id=$1 [L,QSA]
+	#Реврайты для blogs#
+RewriteRule ^blogs/?$ modules/blogs/index.php [L]      
+RewriteRule ^blogs/add/?$ modules/blogs/add.php [L]      
+RewriteRule ^blogs/view([0-9]*)/?$ modules/blogs/view.php?id=$1 [L,QSA]
+RewriteRule ^blogs/ublogs([0-9]*)/?$ modules/blogs/ublogs.php?id=$1 [L,QSA]
+RewriteRule ^blogs/comment([0-9]*)?$ modules/blogs/comment.php?id=$1 [L,QSA]    
+	#Реврайт для страниц ошибок#
+RewriteRule ^error/([0-9]*)?$ /modules/pages/error.php?code=$1 [L,QSA]
+	#Страницы ошибок#
+ErrorDocument 403 /error/403
+ErrorDocument 404 /error/404
