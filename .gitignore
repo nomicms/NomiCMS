@@ -16,5 +16,9 @@ files/mail/*
 files/zc/*
 !files/zc/.htaccess
 
+!files/zc/screen
+files/zc/screen/*
+!files/zc/screen/.htaccess
+
 info.txt
 robots.txt
