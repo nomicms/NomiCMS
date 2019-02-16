@@ -13,7 +13,7 @@ $tmp->title('title', '<a href="/blogs/view'.$id.'">'.Language::config('blogs').'
 User::panel();
 
 if(!User::aut()){
-	$tmp->need_auth('zc/file'.$id);
+	$tmp->need_auth('blogs/view'.$id);
 }
 
 if (!$s) $tmp->show_error();
