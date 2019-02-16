@@ -16,7 +16,7 @@ $tmp->title('title', Language::config('comments'));
 User::panel();
 
 if(!User::aut()){
-	$tmp->need_auth('news'.$id);
+	$tmp->need_auth('news');
 }
 
 $posts=$db->fass_c("SELECT COUNT(*) as count FROM `news_comments` where `news` = '".$id."'");
