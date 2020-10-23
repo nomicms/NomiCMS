@@ -265,7 +265,7 @@ function delete_file($filename) {
 
 function file_icon($path) {
 	$icon_dir = 'file_icon/';
-	$ext = strtolower(explode('.', $path)[1]);
+	$ext = strtolower(end(explode('.', $path)));
 	
 	if (in_array($ext, array('jpg', 'png', 'gif', 'jpeg', 'svg', 'ico', 'psd')))
 		return img($icon_dir . 'img.png');
