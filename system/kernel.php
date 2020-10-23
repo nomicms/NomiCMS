@@ -22,7 +22,7 @@ $browser = browser($_SERVER['HTTP_USER_AGENT']);
 
 
 if (User::aut()) {
-	$useragent = $_SERVER['HTTP_USER_AGENT'];
+	$useragent = $db->guard($_SERVER['HTTP_USER_AGENT']);
 
 	$db->query("UPDATE `users` set `date_last_entry` = '".time()."', `browser` = '".$browser."', `ip` = '".$ip."', `browser_type` = '".$useragent."'  where `id` = '".User::ID()."'");
 
