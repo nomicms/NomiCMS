@@ -103,7 +103,7 @@ if(isset($_GET['edit'])){
 $tmp->div('title', $p['name']);
 echo ($p['opis'] ? '<hr><div class="main">'.bb(smile($p['opis'])). '</div>' : NULL );
 
-$ext_file = strtolower(explode('.', $p['file'])[1]);
+$ext_file = strtolower(end(explode('.', $p['file'])));
 
 if(in_array($ext_file, array('jpg', 'png', 'gif', 'jpeg'))){
 	$tmp->div('main', '<a target="_blank" href="../files/zc/'.$p['file'].'"><img src="../files/zc/'.$p['file'].'" style="max-width: 210px; max-height: 210px;"/></a>');
@@ -117,7 +117,7 @@ if(in_array($ext_file, array('jpg', 'png', 'gif', 'jpeg'))){
 	}
 }
 
-$tmp->div('menu', '<a class="items" href="/zc/file'.$p['id'].'?do" '.($ext_file == 'mp3' || $ext_file == 'mp4' ? 'download' : NULL).'>'.img('down.png').' '.Language::config('down').' ('.format_filesize(R.'/files/zc/'.$p['file']).')</a>');
+$tmp->div('menu', '<a class="items" href="/zc/file'.$p['id'].'?do" '.($ext_file == 'pdf' || $ext_file == 'txt' || $ext_file == 'mp3' || $ext_file == 'mp4' ? 'download' : NULL).'>'.img('down.png').' '.Language::config('down').' ('.format_filesize(R.'/files/zc/'.$p['file']).')</a>');
 
 $tmp->div('main', Language::config('add_name').': '.nick_new($p['kto']).' '.(User::level() >= 3 || User::ID() == $p['kto'] ? '<a class="de" href="/zc/file'.$p['id'].'?del">'.img('delete.png" style="width: inherit').'</a> <a class="de" href="/zc/file'.$p['id'].'?edit">'.img('edit.png" style="width: inherit').'</a>' : NULL).' <span class="times">'.times($p['time']).'</span><br>'.Language::config('downl').': '.$p['down']);
 
